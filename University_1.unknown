@@ -1,0 +1,22 @@
+create Database kalpesh;
+use kalpesh;
+
+Create table Dept(dept_no int, dept_name varchar(20),Building_name Char(1));
+Create table inst(ins_id int,ins_name varchar(20) NOT NULL,Dept_no int, Salary int, Mob_no char(10));
+Create table Course(Course_id int, title varchar(20),Dept_no int, Credits int);
+
+1.	describe inst;
+	describe Dept;
+	describe Course;
+2.	alter table Dept add PRIMARY KEY(dept_no);
+3.	alter table inst add FOREIGN KEY(Dept_no) References Dept(dept_no);
+4.	alter table Dept Add Column(budget int);
+5.	create index i1 on inst(Mob_no);
+6.	create view v1 as select ins_id,ins_name,Dept_no,Mob_no from inst;
+7.	alter table Dept drop Column budget;
+8.	alter table Course modify column title varchar(25);
+9.	alter table Course add Primary Key(Course_id);
+	alter table Course Modify column Course_id int AUTO_INCREMENT;
+	alter table Course AUTO_INCREMENT=51;
+10.	truncate table Course;
+11. 	drop Course;

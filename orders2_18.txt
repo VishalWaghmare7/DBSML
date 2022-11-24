@@ -1,0 +1,32 @@
+use B3
+db.createCollection("orders")
+
+>	db.orders.insertOne({cust_id:"Bhaiyasaheb", order_date:ISODate("2022-08-10T00:00:00Z"), status:"d", price:2000, item:"oranges", qty:2})
+>	db.orders.insertOne({cust_id:"Samarudhhi", order_date:ISODate("2018-09-16T00:00:00Z"), status:"p", price:400, item:"apple", qty:3})
+>	db.orders.insertOne({cust_id:"Samarudhhi", order_date:ISODate("2018-08-16T00:00:00Z"), status:"d", price:560, item:"watermelon", qty:2})
+
+
+1).	var map=function(){emit(this.cust_id, this.price)}
+	var red=function(keys, values){return Array.sum(values);}
+	db.orders.mapReduce(map, red, {out:"total_price"})
+	db.total_price.find()
+
+2).	db.total_price.find()
+	db.orders.insertOne({cust_id:"Sayli", order_date:ISODate("2019-08-16T00:00:00Z"), status:"d", price:2500, item:"mango", qty:4})
+	db.orders.insertOne({cust_id:"sahil", order_date:ISODate("2019-07-16T00:00:00Z"), status:"p", price:3000, item:"banana", qty:5})
+	>	db.orders.mapReduce(map,red, {query:{status:"d"}, out:"total_price_d"}){ result: 'total_price_d', ok: 1 }
+	>	db.total_price_d.find()
+
+3).	db.orders.mapReduce(map,red, {query:{status:"p"}, out:"total_price_p"})
+	db.total_price_p.find()
+
+4).	var map=function(){for(var key in this){emit(key,1);}};
+	var red=function(keys, values){return Array.sum(values);}
+	db.orders.mapReduce(map, red, {out:"total_keys"})
+	db.total_keys.find()
+	var red=function(keys, values){return 1}
+	db.orders.mapReduce(map, red, {out:"total_keys"})
+	db.total_keys.find()
+	var red=function(keys, values){total=0; for(var i in values) total=total+1;}
+	db.orders.mapReduce(map, red, {out:"total_keys"})
+	db.total_keys.find()

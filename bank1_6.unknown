@@ -1,0 +1,52 @@
+create database bank;
+use bank;
+
+create table branch_master(branch_id int primary key, bname char(20));
+create table employee_master(emp_no int primary key, emp_name char(20),branch_id int , salary float, dept char(20), manager_id int);
+	alter table employee_master add foreign key (branch_id) references branch_master(branch_id);
+create table contact_details(emp_id int, email_id char(20), phone_no char(10),foreign key (emp_id) references employee_master(emp_no) on delete set null);
+create table emp_address_details(emp_id int , street char(20), city char(20), state char(20), foreign key (emp_id) references employee_master(emp_no) on delete cascade);
+create table branch_address(branch_id int, city char(20), state char(20), foreign key (branch_id) references branch_master(branch_id));
+	
+	insert into branch_master values(1, "SBI");
+	insert into branch_master values(2, "UBI");
+	insert into branch_master values(3, "ICICI");
+	insert into branch_master values(4, "BOB");
+	insert into branch_master values(5, "HDIC");
+	
+	insert into employee_master values(1, "SHEKHAR",1,78000,"MNG",1);
+	insert into employee_master values(2, "SANJAY",1,68000,"MNG",1);
+	insert into employee_master values(3, "SEEMA",3,56000,"CASH",1);
+	insert into employee_master values(4, "SAYLI",2,56000,"CASH",2);
+	insert into employee_master values(5,"SAMEEKSHA",4,66000,"ACCOUNTS",2);
+	
+	insert into contact_details values(1,"SHEKHAR@GMAIL.COM","1234567890");
+	insert into contact_details values(2,"SANJAY@GMAIL.COM","1234567290");
+	insert into contact_details values(3,"SEEMA@GMAIL.COM","1234567490");
+	insert into contact_details values(4,"SAYLI@GMAIL.COM","1234467490");
+	insert into contact_details values(5,"SAMEEKSHA@GMAIL.COM","1234367490");
+	
+	insert into emp_address_details values(1,"GUJARWADA","UDHALI","MAHARASHTRA");
+	insert into emp_address_details values(2,"RAMANADNAGAR","SAGAR","MADHYA PRADESH");
+	insert into emp_address_details values(3,"SUNDARDAN","LAKHNOW","UTTAR PRADESH");
+	insert into emp_address_details values(4,"SHANTIMARG","JALGAON","MAHARASHTRA");
+	insert into emp_address_details values(5,"AJANTAROADS","JALGAON","MAHARASHTRA");
+	
+	insert into branch_address values(2,"SHIMALA","HIMACHAL PRADESH");
+	insert into branch_address values(3,"VARANASI","UTTAR PRADESH");
+	insert into branch_address values(4,"CHANDIGHAR","PANJAB");
+	insert into branch_address values(5,"PATHANKOT","HARIYANA");
+	insert into branch_address values(1,"JALGAON","MAHARASHTRA");
+	
+	
+1.	select emp_name , a.city from employee_master e inner join emp_address_details a on e.emp_no=a.emp_id inner join branch_address b on e.branch_id=b.branch_id where a.city=b.city;
+2.	select emp_name from employee_master where salary> all( select salary from employee_master e, branch_master b where e.branch_id=b.branch_id and bname="SBI");
+3.	create view total_employee as select count(emp_no) from employee_master;
+4.	create or replace view total_employee as select bname, count(emp_no) from employee_master e, branch_master b where e.branch_id=b.branch_id group by b.branch_id;
+5.	select bname from employee_master e, branch_master b where e.branch_id=b.branch_id and e.salary>100000;
+6.	select b.branch_id, avg(salary), sum(salary) from employee_master e, branch_master b where e.branch_id=b.branch_id group by b.branch_id;
+7.	select e.emp_name from employee_master e where branch_id not in(select b.branch_id from branch_master b, employee_master e where e.branch_id=b.branch_id and bname="SBI");
+8.	select emp_no, emp_name, salary, dept, manager_id, bname from employee_master inner join branch_master on employee_master.branch_id=branch_master.branch_id;
+9.	select emp_no, emp_name, salary, dept, manager_id, bname from employee_master inner join branch_master on employee_master.branch_id=branch_master.branch_id where dept="ADMIN";
+10.	employee_master.emp_no=emp_address_details.emp_id inner join contact_details on emp_address_details.emp_id=contact_details.emp_id;
+11.	select emp_name, email_id, phone_no from employee_master inner join contact_details on employee_master.emp_no=contact_details.emp_id;

@@ -1,0 +1,54 @@
+
+
+use assignmentA5;
+create table stud_marks(name char(20) primary key, total_marks int);
+create table result(roll_no int, name char(20), class char(10));
+
+delimiter $
+create procedure proc_grade ( in roll_no int, in name char(20), in marks int)
+begin
+declare class char(20);
+if marks<=1500 and marks>=990 then set class="DISTINCTION";
+elseif marks<=989 and marks>=900 then set class="FIRST CLASS";
+elseif marks<=899 and marks>=825 then set class="HIGHER SECOND CLASS";
+elseif marks<=824 and marks>=700 then set class="PASS";
+else set class="FAIL";
+end if;
+insert into stud_marks values(name, marks);
+insert into result values(roll_no, name, class);
+end $
+
+
+
+call proc_grade(1,"ARYAN",1200);
+call proc_grade(1,"ASHISH",1200);
+call proc_grade(3,"AMOL",567);
+call proc_grade(2,"ADITYA",768);
+call proc_grade(4,"ANIKET",835);
+call proc_grade(5,"ABHISHEKH",900);
+call proc_grade(6,"ANJALI",789);
+
+select * from stud_marks;
+select * from result;
+
+set global log_bin_trust_function_creators=1;
+delimiter $
+delimiter $
+
+create function total_student (classname varchar(20))
+returns int
+begin
+declare total int;
+select distinct count(*) into total from result where class=classname;
+return total;
+end $
+
+select total_student("DISTINCTION");
+
+select total_student("PASS");
+
+select total_student("FIRST CLASS");
+
+select total_student("HIGHER SECOND CLASS");
+
+select total_student("FAIL");

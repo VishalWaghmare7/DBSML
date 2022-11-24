@@ -1,0 +1,85 @@
+create database Assignment8;
+use Assignment8;
+
+create table student(id char(2), name varchar(20), age int, city varchar(20));
+
+
+---------------------Assignment8.py--------------------------------------------
+
+import mysql.connector
+
+con_obj=mysql.connector.connect( user='root',
+				 password='Prathmesh@123',
+				 host='localhost',
+				 database='Assignment8')
+				 
+def insert(id, name, age, city):
+	cur_obj=con_obj.cursor()
+	sql_query="insert into student(id, name, age, city) values(%s, %s, %s, %s)"
+	values=(id, name, age, city)
+	cur_obj.execute(sql_query, values)
+	con_obj.commit()
+	print("data inserted succesfully")
+	
+def delete(id):
+	cur_obj=con_obj.cursor()
+	sql_query="delete from student where id=%s"
+	values=(id,)
+	cur_obj.execute(sql_query, values)
+	con_obj.commit()
+	print("data delete succesfully")
+	
+def update(id, name, age, city):
+	cur_obj=con_obj.cursor()
+	sql_query="update student set name=%s, age=%s, city=%s where id=%s"
+	values=(name, age, city, id)
+	cur_obj.execute(sql_query, values)
+	con_obj.commit()
+	print("data updated succesfully")
+	
+def display():
+	cur_obj=con_obj.cursor()
+	sql_query="select * from student"
+	cur_obj.execute(sql_query)
+	print(cur_obj.fetchall())
+	
+	
+while True:
+	print("0.Exit")
+	print("1.Display")
+	print("2.Insert")
+	print("3.Delete")
+	print("4.Update")
+	
+	choice=int(input("Enter your choice"))
+	
+	if choice==0:
+		con_obj.close()	
+		exit()
+	elif choice==1:
+		print("Data in the table:\n")
+		display()
+	elif choice==2:
+		print("Insert data")
+		id=input("Enter student id")
+		name=input("Enter name of the student")
+		age=input("Enter age of student")
+		city=input("Enter city of student")
+		insert(id,name,age,city)
+	elif choice==3:
+		print("Delete data")
+		id=input("Enter id of student whose data you want to delete")
+		delete(id)
+	elif choice==4:
+		print("Update data")
+		id=input("Enter id of student whose data you want to update")
+		name=input("Enter name to update")
+		age=input("Enter age to update")
+		city=input("Enter city to update")
+		update(id,name,age,city)
+	else:
+		print("Wrong choice! Enter valid choice")
+		
+
+
+				 

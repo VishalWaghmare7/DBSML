@@ -1,0 +1,30 @@
+use B2
+db.createCollection("orders")
+
+> db.orders.insert({order_id:1, cust_id:"c1", cust_name:"Bhaiyasaheb", phone_no:[9359781328, 8080461682], email_id:"bhaiyasahebchaudhari2002@gmail.com",item_name:"laptop", date_of_order:ISODate("2018-09-11T00:00:00Z"),qty:2, amt:200000, status:"d"})
+> db.orders.insert({order_id:2, cust_id:"c2", cust_name:"Prathmesh", phone_no:[9359781328, 8080461682], email_id:"prathmesh@gmail.com",item_name:"laptop", date_of_order:ISODate("2017-09-11T00:00:00Z"), qty:1,amt:90000, status:"p"})
+> db.orders.insertOne({order_id:4, cust_id:"c4", cust_name:"swami", phone_no: [1234567890, 2345678901], email_id:"swami@gmail.com", item_name:"cpu",date_of_orders:ISODate("2022-11-08T00:00:00Z"), qty:1, amt:120000, status:"p"})
+> db.orders.insertOne({order_id:3, cust_id:"c3", cust_name:"prathmesh", phone_no:[ 3989876543], email_id:"suresh@gmail.com", item_name:"computer",date_of_order:ISODate("2019-10-15T00:00:00Z"), qty:2, amt:250000, status:"p"})
+> db.orders.find().pretty()
+
+1).	db.orders.createIndex({ order_id:1}, {unique:true})
+	db.orders.insertOne({order_id:2, cust_id:"c3", cust_name:"suresh", phone_no:[ 3989876543], email_id:"suresh@gmail.com", item_name:"computer",date_of_order:ISODate("2019-10-15T00:00:00Z"), qty:2, amt:250000, status:"p"})
+
+2).	
+
+3).	db.orders.totalIndexSize()
+
+4).	db.orders.dropIndexes()
+
+5).	db.orders.find({status:"d"}).count()
+
+6).	db.orders.aggregate({$group:{_id:"$cust_name", count_of_orders:{$sum:1}}})
+
+7).	db.orders.distinct("cust_name")
+
+8).   db.orders.insertOne({order_id:4, cust_id:"c4", cust_name:"swami", phone_no:[1234567890, 2345678901], email_id:"swami@gmail.com", item_name:"cpu",date_of_orders:ISODate("2022-11-08T00:00:00Z"), qty:1, amt:120000, status:"p"})
+	> db.orders.aggregate({$match:{status:"p"}}, {$group:{_id:"$cust_name", pend_amt:{$sum:"$amt"}}},{$sort:{pend_amt:-1}})
+
+9).	db.orders.aggregate({$group:{_id:"$date_of_order", count_of_orders:{$sum:1}}},{$sort:{count_of_orders:-1}},{$limit:1})
+
+10).	db.orders.aggregate({$group:{_id:"$item_name", total_qty:{$sum:"$qty"}}},{$sort:{total_qty:-1}},{$limit:3})

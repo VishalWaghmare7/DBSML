@@ -1,0 +1,52 @@
+create database library;
+use library;
+
+create table library(b_id int, title varchar(20), edition int, no_of_copies int);
+create table library_audit(b_id int, title varchar(20), edition int, no_of_copies int, date_of_mod date, type_of_operation char(1), user varchar(20));
+create table transaction(transaction_id int, book_id int, s_id int, operation char(1), no_of_copies int, operation_date date);
+
+1.	alter table library add primary key (b_id);
+	alter table library_audit add foreign key (b_id) references library(b_id);
+	
+	insert into library values(1,'THINKLIKEAMONK',1,20),(2,'WINGSOFFIRE',1,15),(3,'LETUSC',2,30);
+	insert into library values(4,'GALVIN',10,34),(5,'DATABASECONCEPTS',6,15),(6,'FOROUZON',4,5);
+	
+	select * from library;
+	select * from library;
+	select * from library_audit;
+	
+delimiter $
+
+create trigger delete_library
+after delete on library
+for each row
+begin
+declare oper varchar(20);
+set oper='DELETING';
+insert into library_audit values(old.b_id, old.title, old.edition, old.no_of_copies,
+curdate(), oper, current_user());
+end $
+
+alter table library_audit drop constraint library_audit_ibfk_1;
+end $
+
+select * from library;
+select * from library_audit;
+
+
+2.
+delimiter $
+create trigger update_copies
+after insert on transaction
+for each row
+begin
+if new.operation="I" then update library set no_of_copies=no_of_copies-
+new.no_of_copies where library.b_id=new.book_id;
+end if;
+if new.operation="R" then update library set
+no_of_copies=no_of_copies+new.no_of_copies where library.b_id=new.book_id;
+end if;
+end $
+
+insert into transaction values(2,2,2,"I",20,curdate());
+select * from library;

@@ -1,0 +1,40 @@
+create table student(roll_no int, name varchar(20), marks float);
+create table new_student(roll_no int, name varchar(20), marks float);
+
+1.	insert into student values(1,'SHUBHAM',36);
+	insert into student values(1,'SIDHHESH',37);
+	insert into student values(1,'KRUSHNAL',45);	
+	
+	select * from student;
+	
+	begin
+	update student set marks=40 where marks>=35 and marks<=39;
+	if sql%notfound then
+	dbms_output.put_line('no records updated');
+	else
+	dbms_output.put_line (sql%rowcount||'records found');
+	end if;
+	end;
+	/
+	
+	select * from student;
+	
+2.	declare
+	cursor cur_s is select * from student;
+	cursor cur_n( a int) is select * from new_student where roll_no=a;
+	newrec new_student%rowtype;
+	begin
+	for rec in cur_s
+	loop
+	open cur_n(rec.roll_no);
+	fetch cur_n into newrec;
+	if cur_n%notfound then
+	insert into new_student values(rec.roll_no, rec.name, rec.marks);
+	end if;
+	close cur_n;
+	end loop;
+	end;
+	/
+	
+	insert into student values(4,'BHAVESH',45);
+	select * from new_student;

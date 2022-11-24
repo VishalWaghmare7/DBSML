@@ -1,0 +1,42 @@
+								Oracle
+create table borrower(roll_no int, name varchar(20), date_of_issue date, name_of_book varchar(20), status char(1));
+create table fine(roll_no int, dte date, amt float);
+insert into borrower values(1,'Bhaiyasaheb','20-oct-2022','Forouzon','I');
+select * from borrower;
+
+set serveroutput on;
+declare
+roll int:=-1;
+title varchar(20):='Forouzon';
+issue_date date;
+no_days int;
+no_days_tobe_fined int;
+amount float;
+ex_invalid_roll exception;
+begin
+if (roll<0) then raise ex_invalid_roll;
+end if;
+select date_of_issue into issue_date from borrower where roll_no=roll and
+name_of_book=title;
+no_days:=sysdate-issue_date;
+if (no_days>15 and no_days<30) then
+no_days_tobe_fined:=no_days-15;
+amount:=(no_days_tobe_fined*5);
+insert into fine values(roll, sysdate, amount);
+elsif (no_days>30) then
+no_days_tobe_fined:=no_days-30;
+amount:=(no_days_tobe_fined*50)+(15*5);
+insert into fine values(roll, sysdate, amount);
+else
+amount:=0;
+end if;
+update borrower set status='R' where roll_no=roll and name_of_book=title;
+exception
+when ex_invalid_roll then
+dbms_output.put_line('Invaid roll no');
+when no_data_found then
+dbms_output.put_line('No data founs');
+when others then
+dbms_output.put_line('Other exception');
+end;
+/

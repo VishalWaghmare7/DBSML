@@ -1,0 +1,18 @@
+use B1;
+db.createCollection("article")
+
+
+> db.article.insert({ title:"c", content:"procedural langauge",author:"yashwant kanetkar", author_age:35,dop:ISODate("2016-05-13T00:00:00Z"), category:"co", comments:[ {name:"sanjay",remark:"nice" }]}) 
+> db.article.insert( { title:"Forouzon", content:"Computer networks", author:"behorouz forouzon", author_age:78, dop:ISODate("2018-08- 11T00:00:00Z"), category:"co", comments:[ { name:"kalpesh", remark:"good"},{ name:"sudarshan", remark:"nice"}]} )
+> db.article.insert( { title:"c", content:"c ", author:"sharma",author_age:78, dop:ISODate("2018-08-11T00:00:00Z"), category:"co",comments:[ { name:"kalpesh", remark:"good"},{ name:"sudarshan",remark:"nice"}]} )
+> db.article.insert( { title:"Java", content:"basics of java", author:"sharma",author_age:78, dop:ISODate("2018-08-11T00:00:00Z"), category:"IT",comments:[ { name:"kalpesh", remark:"good"},{ name:"sudarshan",remark:"nice"}]} )
+> db.article.find().pretty()
+1).	db.article.findOne()
+2).	db.article.findOne({author:"sharma" })
+3).	Db.collection_name.update({category:"IT"},{$set:{category:"Information Technology"}})
+4).	db.article.update( { title:"Forouzon","comments.name":"Bhaiyasaheb"},{ $set:{"comments.$.remark":"very good" }})
+5).	db.article.update({ title:"Forouzon"},{$push:{ comments:{name:"kartik",remark:"fantastic"}}})
+6).	db.article.remove({ author_age:{$lt: 18}})
+7).	db.article.deleteMany({})
+8).	db.article.drop()
+9).	db.article.findOne({title:"Java"})	
